@@ -26,7 +26,7 @@ exports.registerUser = async (req, res) => {
       }
     };
 
-    jwt.sign(payload, config.secret, { expiresIn: 10000 }, (err, token) => {
+    jwt.sign(payload, config.secret, { expiresIn: 10000 }, async(err, token) => {
       if (!isEmail(email)) {
         throw new Error('Email must be a valid email address.');
       }
@@ -101,7 +101,7 @@ exports.putResult = async (req, res) => {
 
     if (!token) return res.status(401).send({ message: 'No token provided.' });
 
-    jwt.verify(token, config.secret, (err, data) => {
+    jwt.verify(token, config.secret, async(err, data) => {
       if (!err) {
 
         const { name, registerNo, Subject1, Subject2, Subject3 } = req.body;
@@ -127,7 +127,7 @@ exports.allResults = async (req, res) => {
     //  queries database to find a all results
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ message: "No Token Where Provided" })
-    jwt.verify(token, config.secret, (err, data) => {
+    jwt.verify(token, config.secret, async(err, data) => {
       if (!err) {
         await Result.find({}, (err, data) => {
           if (!err) {
@@ -150,7 +150,7 @@ exports.singleResult = async (req, res) => {
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ message: "No Token Where Provided" })
 
-    jwt.verify(token, config.secret, (err, data) => {
+    jwt.verify(token, config.secret, async(err, data) => {
       if (!err) {
         console.log(req.params.id)
         if (!ObjectId.isValid(req.params.id)) {
@@ -181,7 +181,7 @@ exports.editResult = async (req, res) => {
 
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ message: "No Token Where Provided" })
-    jwt.verify(token, config.secret, (err, data) => {
+    jwt.verify(token, config.secret, async(err, data) => {
       if (!err) {
 
         if (!ObjectId.isValid(req.params.id)) {
@@ -223,7 +223,7 @@ exports.deleteResult = async (req, res) => {
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ message: "No Token Where Provided" })
 
-    jwt.verify(token, config.secret, (err, data) => {
+    jwt.verify(token, config.secret, async(err, data) => {
       if (!err) {
         if (!ObjectId.isValid(req.params.id)) {
           res.send('Thers is no such user')
